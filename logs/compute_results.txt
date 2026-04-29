@@ -1,0 +1,67 @@
+
+======================================================================
+  Naive Bayes Classifier
+======================================================================
+
+  Loading dictionaries …
+  Loaded   87 words from 'dataset_dict/spam_dictionary.txt'
+  Loaded  108 words from 'dataset_dict/ham_dictionary.txt'
+
+  Loading training emails …
+  1000 spam  +  2300 ham  training emails loaded.
+
+  ── Task 1: Compute Word Probabilities ────────────────────────────────
+
+  Prior P(spam) = 0.3030   P(ham) = 0.6970
+  Vocabulary size: 397 unique words
+
+  Sample word likelihood ratios:
+    LR('free      ') =  4.1990  [P(w|spam)=0.00052  P(w|ham)=0.00012]
+    LR('meeting   ') =  0.1080  [P(w|spam)=0.00031  P(w|ham)=0.00287]
+    LR('bitcoin   ') = 12.5969  [P(w|spam)=0.00052  P(w|ham)=0.00004]
+    LR('schedule  ') =  0.1008  [P(w|spam)=0.00031  P(w|ham)=0.00308]
+    LR('urgent    ') = 36.5309  [P(w|spam)=0.00599  P(w|ham)=0.00016]
+    LR('report    ') =  0.0442  [P(w|spam)=0.00010  P(w|ham)=0.00234]
+
+  ── Task 3: Test and Evaluate ─────────────────────────────────────────
+  Generated 10 test emails (5 spam + 5 ham).
+
+  ──────────────────────────────────────────────────────────────────────
+  No.  True     MAP      ML       Agree?    Email (truncated)
+  ──────────────────────────────────────────────────────────────────────
+  1    ham      ham      ham      yes       I appreciate the quick follow-up on this sala…
+  2    spam     spam     spam     yes       Register today to secure the prize seats. Rep…
+  3    spam     spam     spam     yes       Register today to secure the exclusive seats.…
+  4    ham      ham      ham      yes       I will confirm the coaching and send notes.
+  5    ham      ham      ham      yes       I will confirm the act and send notes. Thanks…
+  6    spam     spam     spam     yes       Register today to secure the register seats. …
+  7    spam     spam     spam     yes       Congratulations, your click prize is ready. L…
+  8    spam     spam     spam     yes       Act immediately to unlock the discount discou…
+  9    ham      ham      ham      yes       The commit is moving forward as planned.
+  10   ham      ham      ham      yes       I appreciate the quick follow-up on this dysf…
+
+  MAP accuracy : 10/10  (100%)
+  ML  accuracy : 10/10  (100%)
+
+  MAP and ML agreed on every test email.
+
+  Analysis
+  ─────────────────────────────────────────────────────────────────────
+  MAP uses the prior probabilities P(spam)=0.303 and P(ham)=0.697.
+  Because the training corpus has more ham than spam, MAP shifts the
+  decision boundary toward spam — an email must show a stronger spam
+  signal before MAP labels it spam. ML ignores this imbalance and uses
+  a fixed threshold of zero (log LR > 0), so on imbalanced datasets
+  it is more aggressive in labelling borderline emails as spam.
+
+  Potential misclassification causes:
+    - Short emails: a single word can dominate the log-likelihood ratio,
+      making the classifier fragile to vocabulary overlap.
+    - Words that appear in both dictionaries carry weak signal;
+      they contribute close to LR ≈ 1 (log LR ≈ 0) and dilute evidence.
+    - The synthetic model draws ham words into spam emails with prob 0.25,
+      so some spam emails contain mostly ham words by chance.
+  ─────────────────────────────────────────────────────────────────────
+
+======================================================================
+

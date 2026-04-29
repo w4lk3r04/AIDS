@@ -1,0 +1,83 @@
+
+======================================================================
+  Single-Neuron Neural Network Classifier
+======================================================================
+
+  Loading dictionaries …
+  Loaded   87 words from 'dataset_dict/spam_dictionary.txt'
+  Loaded  108 words from 'dataset_dict/ham_dictionary.txt'
+
+  Loading training emails …
+  1000 spam  +  2300 ham  training emails loaded.
+
+  ── Task 1: Feature Extraction ────────────────────────────────────────
+  Spam emails  — avg x_ham = 0.0397
+  Ham  emails  — avg x_ham = 0.1203
+  Total training feature vectors: 3300
+
+  ── Task 2: Train Single-Neuron Classifier ────────────────────────────
+  Settings: lr=0.5, max_epochs=500, tol=1e-06
+
+    epoch  100  loss=0.207816  w=0.4815  b=0.7761
+    epoch  200  loss=0.205472  w=0.8218  b=0.7401
+    epoch  300  loss=0.203240  w=1.1534  b=0.7005
+    epoch  400  loss=0.201116  w=1.4770  b=0.6628
+    epoch  500  loss=0.199098  w=1.7925  b=0.6269
+
+  Trained weights : w = 1.792529   b = 0.626896
+  y(0) = 0.6518  (neuron output for pure-spam email)
+  y(1) = 0.9183  (neuron output for pure-ham  email)
+  Classification threshold : x_ham ≥ 0.372877 → ham
+
+  ── Task 3: Test and Compare Classifiers ──────────────────────────────
+  Generated 10 test emails (5 spam + 5 ham).
+
+  ────────────────────────────────────────────────────────────────────────────
+  No.  True   x_ham   NB-MAP   NB-ML    Neuron    Email
+  ────────────────────────────────────────────────────────────────────────────
+  1    ham    0.077   ham      ham      spam      I appreciate the quick follow-up on…
+  2    spam   0.000   spam     spam     spam      Register today to secure the prize …
+  3    spam   0.000   spam     spam     spam      Register today to secure the exclus…
+  4    ham    0.125   ham      ham      spam      I will confirm the coaching and sen…
+  5    ham    0.000   ham      ham      spam      I will confirm the act and send not…
+  6    spam   0.000   spam     spam     spam      Register today to secure the regist…
+  7    spam   0.000   spam     spam     spam      Congratulations, your click prize i…
+  8    spam   0.000   spam     spam     spam      Act immediately to unlock the disco…
+  9    ham    0.143   ham      ham      spam      The commit is moving forward as pla…
+  10   ham    0.000   ham      ham      spam      I appreciate the quick follow-up on…
+
+  Accuracy summary (10 test emails):
+    Naive Bayes MAP : 10/10  (100%)
+    Naive Bayes ML  : 10/10  (100%)
+    Single Neuron   : 5/10  (50%)
+
+  Analysis
+  ─────────────────────────────────────────────────────────────────────
+  Naive Bayes uses every word's individual P(word|spam) and P(word|ham),
+  so it is sensitive to specific high-signal words (e.g. "urgent", "bitcoin")
+  regardless of how many neutral words surround them.
+
+  The single neuron compresses each email into one number — x_ham — and
+  draws a single decision boundary at x_ham = 0.3729.
+    y(0) = 0.6518  →  output for an email with zero ham words (pure spam)
+    y(1) = 0.9183  →  output for an email with all ham words  (pure ham)
+
+  Advantages of Naive Bayes:
+    - Retains word-level discriminative signal.
+    - Handles short emails reliably.
+    - No training required; probabilities computed directly from counts.
+
+  Advantages of the Single Neuron:
+    - Extremely fast at inference time (one multiplication and comparison).
+    - Robust to vocabulary size — x_ham is always in [0, 1].
+    - Easy to interpret: the threshold has a clear geometric meaning.
+
+  Where each classifier struggles:
+    - Naive Bayes: words shared across both dictionaries dilute the LR.
+    - Single Neuron: emails near the threshold are unreliable; word identity
+      is lost, so "free budget meeting" and "free bitcoin now" look similar
+      if they happen to share the same x_ham value.
+  ─────────────────────────────────────────────────────────────────────
+
+======================================================================
+
